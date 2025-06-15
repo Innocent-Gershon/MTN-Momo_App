@@ -11,8 +11,8 @@ interactive graphs (summaries, pie charts, and bar charts)
 Details of the Transaction See the REST API to retrieve transactions.
  Setup Instructions
  step 1.clone repostiory:
- git clone https://github.com/icyeza/momoPay.git
-cd momopay
+ git clone https://github.com/Innocent-Gershon/MTN-Momo_App.git
+cd MTN-MOM-APP
  step 2.Create & Activate a Virtual Environment:
  python -m venv venv
 source venv/bin/activate   # On macOS/Linux
