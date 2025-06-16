@@ -25,7 +25,7 @@ step 5. Update Database Config in app.py:
 DB_CONFIG = {
     "dbname": "MTN-MOMO-APP",
     "user": "postgres",
-    "password": "your_password",
+    "password": "Kofigershon",
     "host": "localhost",
     "port": 5432
 }
