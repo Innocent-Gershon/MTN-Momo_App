@@ -92,7 +92,7 @@ async function fetchTransactions() {
 
     populateTransactionTable(transactions);
     updateCharts(transactions);
-    populateTypeFilter(); // ✅ Call type dropdown population here
+    populateTypeFilter();
   } catch (error) {
     console.error("Error fetching transactions:", error);
   }
@@ -187,7 +187,6 @@ function updateCharts(data) {
   paymentsVsDepositsChart.update();
 }
 
-// ✅ Populate type filter options
 function populateTypeFilter() {
   const typeFilter = document.getElementById("type-filter");
   typeFilter.innerHTML = `<option value="">All Types</option>`;
@@ -201,7 +200,6 @@ function populateTypeFilter() {
   });
 }
 
-// ✅ Unified filtering logic
 function applyFilters() {
   const selectedType = document.getElementById("type-filter").value;
   const selectedDate = document.getElementById("date-filter").value;
@@ -232,6 +230,16 @@ document.getElementById("date-filter").addEventListener("change", applyFilters);
 document.getElementById("search").addEventListener("input", applyFilters);
 document.getElementById("type-filter").addEventListener("change", applyFilters);
 
-// Run initial setup
+// ✅ Reset Filters Button Logic
+document.getElementById("reset-filters").addEventListener("click", () => {
+  document.getElementById("search").value = "";
+  document.getElementById("type-filter").value = "";
+  document.getElementById("date-filter").value = "";
+
+  populateTransactionTable(transactions);
+  updateCharts(transactions);
+});
+
+// ✅ Run setup
 createInitialCharts();
 fetchTransactions();
