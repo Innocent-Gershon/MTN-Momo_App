@@ -84,7 +84,6 @@ function createInitialCharts() {
 async function fetchTransactions() {
   try {
     const response = await fetch("http://127.0.0.1:5000/transactions");
-
     transactions = await response.json();
 
     document.querySelector(".balance-amount").textContent = `${formatAmount(
@@ -93,45 +92,11 @@ async function fetchTransactions() {
 
     populateTransactionTable(transactions);
     updateCharts(transactions);
+    populateTypeFilter(); // ✅ Call type dropdown population here
   } catch (error) {
     console.error("Error fetching transactions:", error);
   }
 }
-
-function filterByDate(selectedDate) {
-  const filterDate = new Date(selectedDate);
-  filterDate.setUTCHours(0, 0, 0, 0);
-
-  const filtered = transactions.filter((t) => {
-    const d = new Date(t.readable_date);
-    return d.toDateString() === filterDate.toDateString();
-  });
-
-  populateTransactionTable(filtered);
-  updateCharts(filtered);
-}
-
-document.querySelector("#date-filter").addEventListener("change", (e) => {
-  filterByDate(e.target.value);
-});
-
-document.querySelector("#search").addEventListener("input", (e) => {
-  const amount = Number(e.target.value);
-  let filtered = transactions;
-
-  if (document.querySelector("#date-filter").value) {
-    const d = new Date(document.querySelector("#date-filter").value);
-    d.setUTCHours(0, 0, 0, 0);
-    filtered = filtered.filter((t) => new Date(t.readable_date).toDateString() === d.toDateString());
-  }
-
-  if (amount) {
-    filtered = filtered.filter((t) => parseInt(t.amount) === amount);
-  }
-
-  populateTransactionTable(filtered);
-  updateCharts(filtered);
-});
 
 function populateTransactionTable(data) {
   const tbody = document.querySelector(".transactions-table tbody");
@@ -222,5 +187,51 @@ function updateCharts(data) {
   paymentsVsDepositsChart.update();
 }
 
+// ✅ Populate type filter options
+function populateTypeFilter() {
+  const typeFilter = document.getElementById("type-filter");
+  typeFilter.innerHTML = `<option value="">All Types</option>`;
+
+  const types = new Set(transactions.map((t) => t.category));
+  types.forEach((type) => {
+    const option = document.createElement("option");
+    option.value = type;
+    option.textContent = category_names[type] || type;
+    typeFilter.appendChild(option);
+  });
+}
+
+// ✅ Unified filtering logic
+function applyFilters() {
+  const selectedType = document.getElementById("type-filter").value;
+  const selectedDate = document.getElementById("date-filter").value;
+  const searchValue = Number(document.getElementById("search").value);
+
+  let filtered = [...transactions];
+
+  if (selectedType) {
+    filtered = filtered.filter((t) => t.category === selectedType);
+  }
+
+  if (selectedDate) {
+    const d = new Date(selectedDate);
+    d.setUTCHours(0, 0, 0, 0);
+    filtered = filtered.filter((t) => new Date(t.readable_date).toDateString() === d.toDateString());
+  }
+
+  if (searchValue) {
+    filtered = filtered.filter((t) => parseInt(t.amount) === searchValue);
+  }
+
+  populateTransactionTable(filtered);
+  updateCharts(filtered);
+}
+
+// ✅ Event listeners
+document.getElementById("date-filter").addEventListener("change", applyFilters);
+document.getElementById("search").addEventListener("input", applyFilters);
+document.getElementById("type-filter").addEventListener("change", applyFilters);
+
+// Run initial setup
 createInitialCharts();
 fetchTransactions();
