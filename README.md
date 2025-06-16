@@ -27,9 +27,10 @@ DB_CONFIG = {
     "user": "postgres",
     "password": "Kofigershon",
     "host": "localhost",
-    "port": 5432
+    "port": 5000
 }
 step 6: run the app by : 
 python app.py
 
-Video: 
+Video: https://www.loom.com/share/74c57713077a46fab81552575c226297?sid=277c450c-f865-4709-a393-258386830032
+
